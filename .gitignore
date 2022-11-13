@@ -1,0 +1,4 @@
+migration/
+# Project exclude paths
+/target/
+.idea/

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zjl.staff.dao.WagesDao">
+
+    <resultMap type="org.zjl.staff.entity.Wages" id="WagesMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="depName" column="dep_name" jdbcType="VARCHAR"/>
+        <result property="staffName" column="staff_name" jdbcType="VARCHAR"/>
+        <result property="idNumber" column="id_number" jdbcType="VARCHAR"/>
+        <result property="bankDesc" column="bank_desc" jdbcType="VARCHAR"/>
+        <result property="bankNumber" column="bank_number" jdbcType="VARCHAR"/>
+        <result property="calTime" column="cal_time" jdbcType="VARCHAR"/>
+        <result property="money" column="money" jdbcType="DOUBLE"/>
+        <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR"/>
+        <result property="settlementTime" column="settlement_time" jdbcType="TIMESTAMP"/>
+        <result property="days" column="days" jdbcType="INTEGER"/>
+        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+    </resultMap>
+
+</mapper>
+

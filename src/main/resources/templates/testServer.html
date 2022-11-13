@@ -1,0 +1,256 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>工资表</title>
+    <link rel="shortcut icon" href="#">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        .ho:hover {
+            background: #efb307a6;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container table table-bordered ">
+    <h2>工资表</h2>
+    <div class="panel panel-primary">
+
+        <div class="panel-body">
+            <table class="table">
+                <caption>
+                    <h3><span class="label label-primary glyphicon glyphicon-plus" style="cursor: pointer"
+                              data-toggle="modal" data-target="#add" id="addCl">添加</span>
+                        <span class="label label-primary glyphicon glyphicon-plus" style="cursor: pointer"
+                              data-toggle="modal" data-target="#addQuick">快速添加</span>
+                    </h3>
+                    <form action="/" method="get" class="form-inline" id="query">&nbsp;
+                        <label for="">姓名：</label>
+                        <input class="form-control"  type="text" name="staffName" id="name" placeholder="员工姓名" th:value="${wages.staffName}">
+                        <label for="">结算时间：</label>
+                        <input class="form-control" style="width: 200px"  type="month" name="settlementTime" id="settlementTime" placeholder="结算时间" th:value="${wages.settlementTime}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="submit" value="查询" id="queryBtm" class="btn btn-info">
+                        <input type="button" value="导出数据" class="btn btn-info" id="export">
+                        <input type="button" class="btn btn-info" value="初始化" id="init">
+                    </form>
+                    <h1>总金额: <span style="color: #ff5b43"><th:block th:text="${sum}"></th:block>元</span></h1>
+                </caption>
+                <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>姓名</th>
+                    <th>身份证号码</th>
+                    <th>工资卡开户银行</th>
+                    <th>工资卡卡号</th>
+                    <th>结算时间</th>
+                    <th>应发工资</th>
+                    <th>联系号码</th>
+                    <th>出勤天数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item,index:${list}" class="find">
+                    <td th:text="${index.count}"></td>
+                    <td th:text="${item.staffName}"></td>
+                    <td th:text="${item.idNumber}"></td>
+                    <td th:text="${item.bankDesc}"></td>
+                    <td th:text="${item.bankNumber}"></td>
+                    <td th:text="${item.settlementTime}"></td>
+                    <td th:text="${item.money}"></td>
+                    <td th:text="${item.phoneNumber}"></td>
+                    <td th:text="${item.days}"></td>
+                    <td><a th:href="'/delete/'+${item.id}" onclick='return confirm("确定删除该记录？");' >删除</a>
+                        <a href="#" data-toggle="modal" data-target="#update" class="edit">修改</a>
+                        <input type="hidden" th:value="${item.id}" class="aid">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!-- 添加窗口 -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title text-center" id="myModalLabel">
+                    添加工资信息
+                </h4>
+
+            </div>
+            <div class="modal-body">
+                <form class="form-group" action="/add" method="post" id="form1">
+                    <div class="form-group">
+                        <label for="">姓名</label>
+                        <input class="form-control" type="text" placeholder="请输入工人姓名" name="staffName"
+                               required="required" id="staffName">
+                    </div>
+                    <div class="form-group">
+                        <label for="">身份证号码</label>
+                        <input class="form-control" type="text" placeholder="请输入身份证号码" name="idNumber" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="">工资卡开户银行</label>
+                        <select class="form-control" name="bankDesc" id="bankDesc">
+                            <option selected value="中国建设银行重庆分行">中国建设银行重庆分行</option>
+                            <option value="中国农业银行重庆分行">中国农业银行重庆分行</option>
+                            <option value="中国农业银行重庆分行">中国农业银行重庆分行</option>
+                            <option value="中国银行重庆分行">中国银行重庆分行</option>
+                            <option value="中国光大银行重庆分行">中国光大银行重庆分行</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">工资卡卡号</label>
+                        <input class="form-control" type="text" placeholder="请输入工资卡卡号" name="bankNumber" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="">应发工资</label>
+                        <input class="form-control" type="text" placeholder="请输入应发工资" name="money" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="">联系号码</label>
+                        <input class="form-control" type="number" placeholder="请输入联系号码" name="phoneNumber" required="required" maxlength="11" minlength="11" >
+                    </div>
+                    <div class="form-group">
+                        <label for="">结算时间</label>
+                        <input class="form-control" type="month" placeholder="请输入结算时间yyyy-MM" name="settlementTime" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="">出勤天数</label>
+                        <input class="form-control" name="days" type="text" placeholder="请输入出勤天数">
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <input type="submit" value="确定" class="btn btn-primary confirm">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                        </button>
+
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div><!--添加窗口-->
+</div>
+<!-- 修改窗口 -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title text-center" id="myModalLabel2">
+                    修改服务器
+                </h4>
+
+            </div>
+            <div class="modal-body">
+            <form class="form-group" action="/edit" method="POST" id="form2">
+
+                <div class="form-group">
+                    <label for="">姓名</label>
+                    <input class="form-control" type="text" placeholder="请输入工人姓名" name="staffName"
+                           required="required">
+                </div>
+                <div class="form-group">
+                    <label for="">身份证号码</label>
+                    <input class="form-control" type="text" placeholder="请输入身份证号码" name="idNumber" required="required">
+                </div>
+                <div class="form-group">
+                    <label for="">工资卡开户银行</label>
+                    <select class="form-control" name="bankDesc">
+                        <option selected value="中国建设银行重庆分行">中国建设银行重庆分行</option>
+                        <option value="中国农业银行重庆分行">中国农业银行重庆分行</option>
+                        <option value="中国农业银行重庆分行">中国农业银行重庆分行</option>
+                        <option value="中国银行重庆分行">中国银行重庆分行</option>
+                        <option value="中国光大银行重庆分行">中国光大银行重庆分行</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="">工资卡卡号</label>
+                    <input class="form-control" type="text" placeholder="请输入工资卡卡号" name="bankNumber" required="required">
+                </div>
+                <div class="form-group">
+                    <label for="">应发工资</label>
+                    <input class="form-control" type="text" placeholder="请输入应发工资" name="money" required="required">
+                </div>
+                <div class="form-group">
+                    <label for="">联系号码</label>
+                    <input class="form-control" type="number" placeholder="请输入联系号码" name="phoneNumber" required="required" maxlength="11" minlength="11">
+                </div>
+                <div class="form-group">
+                    <label for="">结算时间</label>
+                    <input class="form-control" type="month" placeholder="请输入结算时间yyyy-MM" name="settlementTime" required="required">
+                </div>
+                <div class="form-group">
+                    <label for="">出勤天数</label>
+                    <input class="form-control" name="days" type="text" placeholder="请输入出勤天数">
+                </div>
+                <input type="hidden" id="editId" name="id">
+                <div class="modal-footer">
+                    <input type="submit" value="确定" class="btn btn-primary confirm">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div><!--添加窗口-->
+</div><!--添加窗口-->
+
+
+<!-- 添加窗口 -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="addQuick" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title text-center" id="myModalLabel3">
+                    添加工资信息
+                </h4>
+
+            </div>
+            <div class="modal-body">
+                <form class="form-group" action="/quickAdd" method="post" id="form3">
+                    <div class="form-group">
+                        <label for="">拷贝月份</label>
+                        <input class="form-control" type="month" placeholder="请输入工人姓名" name="targetTime"
+                               required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="">结算时间</label>
+                        <input class="form-control" type="month" placeholder="请输入结算时间yyyy-MM" name="settlementTime" required="required">
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="确定" class="btn btn-primary confirm">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                        </button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div><!--添加窗口-->
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="js/update.js"></script>
+</html>
