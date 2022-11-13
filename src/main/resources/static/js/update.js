@@ -33,10 +33,10 @@ $(function () {
         });
 
     })
-    $("#query").bind("input propertychange",function () {
-        console.log("result: ");
-           $("#query").submit();
-    });
+    // $("#query").bind("input propertychange",function () {
+    //     console.log("result: ");
+    //        $("#query").submit();
+    // });
 
     $("#init").click(function () {
         window.location.href = "/";
