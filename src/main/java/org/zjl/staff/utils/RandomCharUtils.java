@@ -1,5 +1,7 @@
 package org.zjl.staff.utils;
 
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 public class RandomCharUtils {
@@ -29,5 +31,10 @@ public class RandomCharUtils {
 
         }
         return randomMap;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(get(20,2,3));
+        System.out.println(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth());
     }
 }

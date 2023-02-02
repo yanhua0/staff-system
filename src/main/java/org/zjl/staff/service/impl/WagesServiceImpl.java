@@ -128,6 +128,7 @@ public class WagesServiceImpl implements WagesService {
             String time = wagesList.get(0).getSettlementTime() + "-01";
             LocalDate localDate = LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             int sheetStartRow = 4;
+            int totalDays=LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
             for (int i = 0; i < wagesList.size(); i++) {
                 Wages w = wagesList.get(i);
                 int rowNum = i + 1;
@@ -139,7 +140,8 @@ public class WagesServiceImpl implements WagesService {
                 }
                 buildRow0(sheet1, wb, localDate.getYear(), localDate.getMonthValue());
                 buildRow2(sheet1, wb, localDate.getMonthValue());
-                sheetStartRow = buildSheet1(sheet1, sheetStartRow, i, w);
+
+                sheetStartRow = buildSheet1(sheet1, sheetStartRow, i, w,totalDays);
             }
             String name = "%s月高科江澜三、四期二项目";
             POIExcelUtils.getOutStreamResponse(wb, String.format(name, localDate.getMonthValue()));
@@ -156,11 +158,11 @@ public class WagesServiceImpl implements WagesService {
         return Optional.ofNullable(queryAll(wages)).filter(e->!CollectionUtils.isEmpty(e)).map(e->e.get(0)).orElse(new Wages());
     }
 
-    private int buildSheet1(Sheet sheet1, int sheetStartRow, int i, Wages w) {
+    private int buildSheet1(Sheet sheet1, int sheetStartRow, int i, Wages w,int totalDays) {
         Row rowSheet1 = sheet1.getRow(sheetStartRow);
         //后续如果超过了61行在说
         sheetStartRow++;
-        Map<Integer, String> valueMap2 = RandomCharUtils.get(31, 2, w.getDays());
+        Map<Integer, String> valueMap2 = RandomCharUtils.get(totalDays, 2, w.getDays());
         for (int j = 0; j < 35; j++) {
             Cell cell = rowSheet1.getCell(j);
 //                    XSSFCellStyle cellStyle = wb.createCellStyle();
